@@ -108,12 +108,10 @@ export const NavigationBar = () => {
     })
   );
 
-  // @ts-ignore
   const handleDragStart = (event: any) => {
     setDraggingId(event.active.id);
   };
 
-  // @ts-ignore
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
     setDraggingId(null);

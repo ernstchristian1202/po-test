@@ -6,8 +6,6 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragOverlay,
-  MeasuringStrategy
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -69,6 +67,7 @@ export const NavigationBar = () => {
   ]);
   const [activeId, setActiveId] = useState(pages[0].id);
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const insertPage = (index: number) => {
     const newPage = generatePage('New', 'doc');
@@ -116,20 +115,35 @@ export const NavigationBar = () => {
           items={pages.map((p) => p.id)}
           strategy={horizontalListSortingStrategy}
         >
-          <div className="flex gap-3 items-center bg-white p-4 rounded-md shadow overflow-x-auto">
+          <div className="flex items-center bg-white p-4 rounded-md shadow overflow-x-auto">
             {pages.map((page, idx) => (
-              <div key={page.id} className="flex items-center gap-2">
+              <div key={page.id} className="flex items-center">
                 <SortablePage
                   page={page}
                   activeId={activeId}
                   onClick={() => setActiveId(page.id)}
                 />
-                {idx < pages.length - 1 && draggingId === null && (
-                  <InsertButton onClick={() => insertPage(idx + 1)} />
+                {draggingId === null && (
+                  <div
+                    className="relative group flex items-center justify-center w-10"
+                    onMouseEnter={() => setHoverIndex(idx)}
+                    onMouseLeave={() => setHoverIndex(null)}
+                  >
+                    <div className="w-full h-0.5 border-t border-dashed border-gray-300" />
+                    {hoverIndex === idx && (
+                      <div className="absolute z-10">
+                        <InsertButton onClick={() => insertPage(idx + 1)} />
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             ))}
-            {draggingId === null && <AddPageButton onClick={addPage} />}
+            {draggingId === null && (
+              <div className="flex items-center gap-2">
+                <AddPageButton onClick={addPage} />
+              </div>
+            )}
           </div>
         </SortableContext>
       </DndContext>

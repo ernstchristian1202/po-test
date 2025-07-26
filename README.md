@@ -1,18 +1,19 @@
-# Form Navigation Bar UI
+# Page Navigation Builder
 
-This project implements a fully interactive drag-and-drop form page navigation bar UI.
+A modern drag-and-drop navigation interface built with:
+
+- 🔵 React + Next.js
+- 🎨 Tailwind CSS
+- 🧩 @dnd-kit for drag and drop
+- 🧠 Radix UI Popover for context menus
 
 ## Features
-- Drag to reorder form pages (pending in this base)
-- Insert page with hover "+"
-- Context menu (design included, logic optional)
-- Add new page via "+ Add Page"
 
-## Stack
-- React + Next.js
-- Tailwind CSS
-- DnD support via `@dnd-kit`
-- Animations with `framer-motion`
+✅ Add / rename / reorder pages  
+✅ Context menu per item  
+✅ Drag-and-drop page ordering  
+✅ Smooth UI transitions  
+✅ No backend — all in-memory
 
 ## Getting Started
 ```bash

@@ -68,16 +68,36 @@ export const NavigationBar = () => {
   const [activeId, setActiveId] = useState(pages[0].id);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newPageName, setNewPageName] = useState('');
+  const [insertIndex, setInsertIndex] = useState<number | null>(null);
 
   const insertPage = (index: number) => {
-    const newPage = generatePage('New', 'doc');
-    const newPages = [...pages];
-    newPages.splice(index, 0, newPage);
-    setPages(newPages);
+    setInsertIndex(index);
+    setIsModalOpen(true);
   };
 
   const addPage = () => {
-    setPages([...pages, generatePage('New', 'doc')]);
+    setInsertIndex(null);
+    setIsModalOpen(true);
+  };
+
+  const confirmAddPage = () => {
+    if (newPageName.trim()) {
+      const newPage = generatePage(newPageName.trim(), 'doc');
+      setPages(prev => {
+        const newPages = [...prev];
+        if (insertIndex !== null && insertIndex <= newPages.length) {
+          newPages.splice(insertIndex, 0, newPage);
+        } else {
+          newPages.push(newPage);
+        }
+        return newPages;
+      });
+      setNewPageName('');
+      setInsertIndex(null);
+      setIsModalOpen(false);
+    }
   };
 
   const sensors = useSensors(
@@ -147,6 +167,38 @@ export const NavigationBar = () => {
           </div>
         </SortableContext>
       </DndContext>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-80">
+            <h2 className="text-lg font-semibold mb-4">Create New Page</h2>
+            <input
+              type="text"
+              value={newPageName}
+              onChange={(e) => setNewPageName(e.target.value)}
+              placeholder="Enter page name"
+              className="w-full border border-gray-300 rounded px-3 py-2 mb-4"
+            />
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setInsertIndex(null);
+                }}
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmAddPage}
+                className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
